@@ -24,8 +24,30 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func WsEndpoint(w http.ResponseWriter, r *http.Request) {
+// WsJsonResponse defines the response sent back from websocket
+type WsJsonResponse struct {
+	Action      string `json:"action"`
+	Message     string `json:"message"`
+	MessageType string `json:"message_type"`
+}
 
+// WsEndpoint upgrades connection to websocket
+func WsEndpoint(w http.ResponseWriter, r *http.Request) {
+	// Upgrade the connection
+	ws, err := upgradeConnection.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println(err)
+	}
+
+	log.Println("Client connected to endpoint")
+
+	var response WsJsonResponse
+	response.Message = `<em><small>Connected to server</small></em>`
+
+	err = ws.WriteJSON(response)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func renderPage(w http.ResponseWriter, tmpl string, data jet.VarMap) error {
