@@ -80,3 +80,7 @@ func renderPage(w http.ResponseWriter, tmpl string, data jet.VarMap) error {
 	return nil
 
 }
+
+func Client() {
+	websocket.DefaultDialer.NetDial("", "")
+}
